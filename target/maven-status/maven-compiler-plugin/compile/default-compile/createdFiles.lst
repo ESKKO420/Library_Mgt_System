@@ -1,10 +1,12 @@
 com\charles\librarymgt\controllers\BookController.class
+com\charles\librarymgt\models\BorrowRecord.class
+com\charles\librarymgt\controllers\PatronController.class
+com\charles\librarymgt\models\Librarian.class
 com\charles\librarymgt\LibraryMgtSystemApplication.class
+com\charles\librarymgt\controllers\LibrarianController.class
 com\charles\librarymgt\models\Patron.class
 com\charles\librarymgt\repository\BookRepository.class
 com\charles\librarymgt\repository\PatronRepository.class
-com\charles\librarymgt\models\BorrowRecord.class
 com\charles\librarymgt\models\Book.class
 com\charles\librarymgt\repository\BorrowBookRepository.class
-com\charles\librarymgt\models\Librarian.class
 com\charles\librarymgt\repository\LibrarianRepository.class

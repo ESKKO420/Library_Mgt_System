@@ -1,7 +1,9 @@
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\controllers\BookController.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\models\Librarian.java
+C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\controllers\PatronController.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\repository\BookRepository.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\repository\LibrarianRepository.java
+C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\controllers\LibrarianController.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\models\Book.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\repository\PatronRepository.java
 C:\Users\CHARLES\Downloads\Library_Mgt_System\src\main\java\com\charles\librarymgt\LibraryMgtSystemApplication.java
