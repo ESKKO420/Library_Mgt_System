@@ -9,27 +9,27 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "books", schema = "public")
-public class Book {
+@Table(name = "patrons", schema = "public")
+public class Patron {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String author;
-    private String isbn;
-    private String publicationYear;
+    private String name;
+    private String contact;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "patron", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<BorrowRecord> borrowRecords;
+
 }

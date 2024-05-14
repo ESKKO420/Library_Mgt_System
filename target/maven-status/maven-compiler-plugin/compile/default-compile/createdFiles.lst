@@ -1,4 +1,7 @@
 com\charles\librarymgt\controllers\BookController.class
 com\charles\librarymgt\LibraryMgtSystemApplication.class
-com\charles\librarymgt\models\Book.class
+com\charles\librarymgt\models\Patron.class
 com\charles\librarymgt\repository\BookRepository.class
+com\charles\librarymgt\models\BorrowRecord.class
+com\charles\librarymgt\models\Book.class
+com\charles\librarymgt\models\Librarian.class
