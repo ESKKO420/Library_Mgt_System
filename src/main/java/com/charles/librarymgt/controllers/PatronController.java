@@ -1,8 +1,15 @@
 package com.charles.librarymgt.controllers;
 
+import com.charles.librarymgt.dtos.PatronDto;
 import com.charles.librarymgt.models.Patron;
 import com.charles.librarymgt.repository.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,23 +21,29 @@ public class PatronController {
     @Autowired
     private PatronRepository patronRepository;
 
+    @Autowired
+    private PagedResourcesAssembler<PatronDto> pagedResourcesAssembler;
+
     @GetMapping("/patrons")
-    List<Patron> index() {
-        return patronRepository.findAll();
+    PagedModel<EntityModel<PatronDto>> index(
+            @PageableDefault(page = 0, size = Integer.MAX_VALUE, sort = {"name"}) Pageable paging) {
+        Page<Patron> result = patronRepository.findAll(paging);
+
+        return pagedResourcesAssembler.toModel(result.map(PatronDto::new));
     }
 
     @GetMapping("/patrons/{id}")
-    Patron show(@PathVariable Long id) {
-        return patronRepository.findById(id).get();
+    PatronDto show(@PathVariable Long id) {
+        return new PatronDto(patronRepository.findById(id).get());
     }
 
     @PostMapping("/patrons")
-    Patron store(@RequestBody Patron patron) {
-        return patronRepository.save(patron);
+    PatronDto store(@RequestBody Patron patron) {
+        return new PatronDto(patronRepository.save(patron));
     }
 
     @PutMapping("/patrons/{id}")
-    Patron update(@RequestBody Patron newPatron, @PathVariable Long id) {
+    PatronDto update(@RequestBody Patron newPatron, @PathVariable Long id) {
         var patron = patronRepository.findById(id).get();
 
         if (!patron.getName().equals(newPatron.getName())) {
@@ -40,7 +53,7 @@ public class PatronController {
             patron.setContact(newPatron.getContact());
         }
 
-        return patronRepository.save(patron);
+        return new PatronDto(patronRepository.save(patron));
     }
 
     @DeleteMapping("/patrons/{id}")

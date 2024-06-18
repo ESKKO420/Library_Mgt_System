@@ -2,10 +2,7 @@ package com.charles.librarymgt.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,14 +11,17 @@ import java.util.List;
 
 //@Setter
 //@Getter
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "books", schema = "public")
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String author;
     private String title;
     private String publicationYear;
@@ -36,4 +36,11 @@ public class Book {
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<BorrowRecord> borrowRecords;
+
+    public Book(String author, String title, String publicationYear, String isbn) {
+        this.author = author;
+        this.title = title;
+        this.publicationYear = publicationYear;
+        this.isbn = isbn;
+    }
 }
