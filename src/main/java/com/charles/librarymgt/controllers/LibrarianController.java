@@ -3,7 +3,10 @@ package com.charles.librarymgt.controllers;
 import com.charles.librarymgt.dtos.BorrowRecordDto;
 import com.charles.librarymgt.dtos.LibrarianDto;
 import com.charles.librarymgt.models.Librarian;
+import com.charles.librarymgt.request.CreateLibrarianRequest;
+import com.charles.librarymgt.request.UpdateLibrarianRequest;
 import com.charles.librarymgt.service.LibrarianService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,13 +34,13 @@ public class LibrarianController {
     }
 
     @PostMapping("/librarians")
-    LibrarianDto store(@RequestBody Librarian librarian) {
-        return librarianService.createLibrarian(librarian);
+    LibrarianDto store(@RequestBody @Valid CreateLibrarianRequest request) {
+        return librarianService.createLibrarian(request);
     }
 
     @PutMapping("/librarians/{id}")
-    LibrarianDto update(@RequestBody Librarian newLibrarian, @PathVariable Long id) {
-        return librarianService.updateLibrarian(newLibrarian, id);
+    LibrarianDto update(@RequestBody @Valid UpdateLibrarianRequest request, @PathVariable Long id) {
+        return librarianService.updateLibrarian(request, id);
     }
 
     @DeleteMapping("/librarians/{id}")
@@ -48,6 +51,7 @@ public class LibrarianController {
     @PostMapping("/borrow/{bookId}/patron/{patronId}")
     BorrowRecordDto borrowBook(@PathVariable Long bookId, @PathVariable Long patronId) {
         return librarianService.borrowBook(bookId, patronId);
+
     }
 
     @PutMapping("/return/{bookId}/patron/{patronId}")

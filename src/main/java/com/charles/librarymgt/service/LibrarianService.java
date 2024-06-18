@@ -1,6 +1,11 @@
 package com.charles.librarymgt.service;
 
 import com.charles.librarymgt.dtos.BorrowRecordDto;
+import com.charles.librarymgt.exception.NotFoundException;
+import com.charles.librarymgt.models.Book;
+import com.charles.librarymgt.models.Patron;
+import com.charles.librarymgt.request.CreateLibrarianRequest;
+import com.charles.librarymgt.request.UpdateLibrarianRequest;
 import org.springframework.stereotype.Service;
 import com.charles.librarymgt.dtos.LibrarianDto;
 import com.charles.librarymgt.models.BorrowRecord;
@@ -22,6 +27,7 @@ import java.time.LocalDate;
 
 @Service
 public class LibrarianService {
+
     @Autowired
     private LibrarianRepository librarianRepository;
     @Autowired
@@ -29,7 +35,7 @@ public class LibrarianService {
     @Autowired
     private BookRepository bookRepository;
     @Autowired
-    private BorrowBookRepository borrowBookRepository;
+    private BorrowBookRepository borrowRepository;
 
     @Autowired
     private PagedResourcesAssembler<LibrarianDto> pagedResourcesAssembler;
@@ -41,24 +47,25 @@ public class LibrarianService {
     }
 
     public LibrarianDto getLibrarian(Long id) {
-        return new LibrarianDto(librarianRepository.findById(id).get());
+        return new LibrarianDto(librarianRepository.findById(id).orElseThrow(() -> new NotFoundException(Librarian.class, id)));
     }
 
-    public LibrarianDto createLibrarian(Librarian librarian) {
+    public LibrarianDto createLibrarian(CreateLibrarianRequest request) {
+        var librarian = new Librarian(request.email, request.name, request.password);
         return new LibrarianDto(librarianRepository.save(librarian));
     }
 
-    public LibrarianDto updateLibrarian(Librarian newLibrarian, Long id) {
-        var user = librarianRepository.findById(id).get();
+    public LibrarianDto updateLibrarian(UpdateLibrarianRequest request, Long id) {
+        var user = librarianRepository.findById(id).orElseThrow(() -> new NotFoundException(Librarian.class, id));
 
-        if (!user.getEmail().equals(newLibrarian.getEmail())) {
-            user.setEmail(newLibrarian.getEmail());
+        if (request.email != null && !user.getEmail().equals(request.email)) {
+            user.setEmail(request.email);
         }
-        if (!user.getName().equals(newLibrarian.getName())) {
-            user.setName(newLibrarian.getName());
+        if (request.name != null && !user.getName().equals(request.name)) {
+            user.setName(request.name);
         }
-        if (!user.getPassword().equals(newLibrarian.getPassword())) {
-            user.setPassword(newLibrarian.getPassword());
+        if (request.password != null && !user.getPassword().equals(request.password)) {
+            user.setPassword(request.password);
         }
 
         return new LibrarianDto(librarianRepository.save(user));
@@ -69,27 +76,27 @@ public class LibrarianService {
     }
 
     public BorrowRecordDto borrowBook(Long bookId, Long patronId) {
-        var patron = patronRepository.findById(patronId).get();
-        var book = bookRepository.findById(bookId).get();
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException(Book.class, bookId));
+        var patron = patronRepository.findById(patronId).orElseThrow(() -> new NotFoundException(Patron.class, patronId));
 
-        var borrowRecord = borrowBookRepository.findBorrowRecordByBookAndPatronAndReturnDateNull(book, patron);
+        var borrowRecord = borrowRepository.findBorrowRecordByBookAndPatronAndReturnDateNull(book, patron);
         if (borrowRecord == null) {
             var newRecord = new BorrowRecord(book, patron);
             newRecord.setBorrowDate(LocalDate.now().atStartOfDay());
 
-            return new BorrowRecordDto(borrowBookRepository.save(newRecord));
+            return new BorrowRecordDto(borrowRepository.save(newRecord));
         }
         return null;
     }
 
     public BorrowRecordDto returnBook(Long bookId, Long patronId) {
-        var patron = patronRepository.findById(patronId).get();
-        var book = bookRepository.findById(bookId).get();
+        var book = bookRepository.findById(bookId).orElseThrow(() -> new NotFoundException(Book.class, bookId));
+        var patron = patronRepository.findById(patronId).orElseThrow(() -> new NotFoundException(Patron.class, patronId));
 
-        var borrowRecord = borrowBookRepository.findBorrowRecordByBookAndPatronAndReturnDateNull(book, patron);
+        var borrowRecord = borrowRepository.findBorrowRecordByBookAndPatronAndReturnDateNull(book, patron);
         if (borrowRecord != null) {
             borrowRecord.setReturnDate(LocalDate.now().atStartOfDay());
-            return new BorrowRecordDto(borrowBookRepository.save(borrowRecord));
+            return new BorrowRecordDto(borrowRepository.save(borrowRecord));
         }
         return null;
     }

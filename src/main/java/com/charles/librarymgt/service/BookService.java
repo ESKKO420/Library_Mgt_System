@@ -1,6 +1,9 @@
 package com.charles.librarymgt.service;
 
 
+import com.charles.librarymgt.exception.NotFoundException;
+import com.charles.librarymgt.request.CreateBookRequest;
+import com.charles.librarymgt.request.UpdateBookRequest;
 import org.springframework.stereotype.Service;
 import com.charles.librarymgt.dtos.BookDto;
 import com.charles.librarymgt.models.Book;
@@ -26,27 +29,29 @@ public class BookService {
     }
 
     public BookDto getBook(Long id) {
-        return new BookDto(bookRepository.findById(id).get());
+        var book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException(Book.class, id));
+        return new BookDto(book);
     }
 
-    public BookDto addBook(Book book) {
+    public BookDto addBook(CreateBookRequest request) {
+        var book = new Book(request.title, request.author, request.isbn, request.publicationYear);
         return new BookDto(bookRepository.save(book));
     }
 
-    public BookDto updateBook(Book newBook, Long id) {
-        var book = bookRepository.findById(id).get();
+    public BookDto updateBook(UpdateBookRequest request, Long id) {
+        var book = bookRepository.findById(id).orElseThrow(() -> new NotFoundException(Book.class, id));
 
-        if (!book.getTitle().equals(newBook.getTitle())) {
-            book.setTitle(newBook.getTitle());
+        if (request.title != null && !book.getTitle().equals(request.title)) {
+            book.setTitle(request.title);
         }
-        if (!book.getAuthor().equals(newBook.getAuthor())) {
-            book.setAuthor(newBook.getAuthor());
+        if (request.author != null && !book.getAuthor().equals(request.author)) {
+            book.setAuthor(request.author);
         }
-        if (!book.getIsbn().equals(newBook.getIsbn())) {
-            book.setIsbn(newBook.getIsbn());
+        if (request.isbn != null && !book.getIsbn().equals(request.isbn)) {
+            book.setIsbn(request.isbn);
         }
-        if (!book.getPublicationYear().equals(newBook.getPublicationYear())) {
-            book.setPublicationYear(newBook.getPublicationYear());
+        if (request.publicationYear != null && !book.getPublicationYear().equals(request.publicationYear)) {
+            book.setPublicationYear(request.publicationYear);
         }
 
         return new BookDto(bookRepository.save(book));
