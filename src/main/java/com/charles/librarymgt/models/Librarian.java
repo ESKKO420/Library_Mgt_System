@@ -29,4 +29,9 @@ public class Librarian {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    public Librarian(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
 }

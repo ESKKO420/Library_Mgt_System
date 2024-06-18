@@ -2,7 +2,10 @@ package com.charles.librarymgt.controllers;
 
 import com.charles.librarymgt.dtos.BookDto;
 import com.charles.librarymgt.models.Book;
+import com.charles.librarymgt.request.CreateBookRequest;
+import com.charles.librarymgt.request.UpdateBookRequest;
 import com.charles.librarymgt.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,13 +35,13 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    BookDto store(@RequestBody Book book) {
-        return bookService.addBook(book);
+    BookDto store(@RequestBody @Valid CreateBookRequest request) {
+        return bookService.addBook(request);
     }
 
     @PutMapping("/books/{id}")
-    BookDto update(@RequestBody Book newBook, @PathVariable Long id) {
-        return bookService.updateBook(newBook, id);
+    BookDto update(@RequestBody UpdateBookRequest request, @PathVariable Long id) {
+        return bookService.updateBook(request, id);
     }
 
     @DeleteMapping("/books/{id}")
